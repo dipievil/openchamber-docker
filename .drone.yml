@@ -49,7 +49,7 @@ trigger:
 
 steps:
   - name: release
-    image: node:lts
+    image: oven/bun:1
     environment:
       GITHUB_TOKEN:
         from_secret: GITHUB_PAT
@@ -58,7 +58,8 @@ steps:
       GITHUB_NAME:
         from_secret: GITHUB_NAME
     commands:
+      - apt-get update -qq && apt-get install -y -qq git
       - git config --global user.email "$GITHUB_EMAIL"
       - git config --global user.name "$GITHUB_NAME"
-      - npm ci
-      - npx semantic-release
+      - bun install --ignore-scripts
+      - bun x semantic-release
