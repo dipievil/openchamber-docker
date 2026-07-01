@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 ARG OPENCHAMBER_VERSION=v1.13.8
 
-FROM alpine/git:2.45 AS source
+FROM alpine/git:latest AS source
 ARG OPENCHAMBER_VERSION
 RUN git clone --depth 1 --branch ${OPENCHAMBER_VERSION} \
     https://github.com/openchamber/openchamber.git /openchamber

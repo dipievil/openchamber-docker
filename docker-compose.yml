@@ -16,10 +16,4 @@ services:
       - ./data/opencode/config:/home/openchamber/.config/opencode
       - ./data/ssh:/home/openchamber/.ssh
       - ./workspaces:/home/openchamber/workspaces
-    environment:
-      OPENCHAMBER_UI_PASSWORD: ${OPENCHAMBER_UI_PASSWORD:?Set OPENCHAMBER_UI_PASSWORD before exposing OpenChamber through Docker}
-    # OPENCHAMBER_HOST: 0.0.0.0
-    # OPENCODE_HOST: http://172.17.0.1:4096
-    # OPENCODE_SKIP_START: true
-    # OPENCHAMBER_OPENCODE_HOSTNAME: 0.0.0.0
     restart: unless-stopped

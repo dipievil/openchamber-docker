@@ -90,26 +90,40 @@ services:
       - ./data/opencode/config:/home/openchamber/.config/opencode
       - ./data/ssh:/home/openchamber/.ssh
       - ./workspaces:/home/openchamber/workspaces
-    environment:
-      OPENCHAMBER_UI_PASSWORD: "${OPENCHAMBER_UI_PASSWORD}"
     restart: unless-stopped
 ```
+
+All configuration is done through a `.env` file (see below). Docker Compose loads it automatically.
 
 Start with:
 
 ```bash
-OPENCHAMBER_UI_PASSWORD="$(openssl rand -base64 24)" docker compose up -d
+cp .env.example .env
+# Edit .env and set OPENCHAMBER_UI_PASSWORD
+docker compose up -d
 ```
 
 ### Configuration
 
 #### Using .env File
 
-Create a `.env` file in the project root:
+Copy the provided `.env.example` to `.env` and edit:
+
+```bash
+cp .env.example .env
+```
+
+Example `.env`:
 
 ```dotenv
+# Required
 OPENCHAMBER_UI_PASSWORD=your-strong-password
+
+# Optional: bind to all interfaces
+OPENCHAMBER_HOST=0.0.0.0
 ```
+
+Docker Compose reads the `.env` file automatically — no need to pass it explicitly. All variables are documented in [Environment Variables](#environment-variables) below.
 
 #### Building a Specific Version
 
@@ -126,10 +140,11 @@ docker build \
 
 #### External OpenCode Server
 
-```yaml
-environment:
-  OPENCODE_HOST: http://host.docker.internal:4096
-  OPENCODE_SKIP_START: "true"
+Add to your `.env`:
+
+```dotenv
+OPENCODE_HOST=http://host.docker.internal:4096
+OPENCODE_SKIP_START=true
 ```
 
 ## Environment Variables
