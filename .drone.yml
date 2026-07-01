@@ -1,0 +1,62 @@
+---
+kind: pipeline
+type: docker
+name: daily-publish
+
+trigger:
+  cron:
+    - daily
+
+steps:
+  - name: publish
+    image: docker:cli
+    environment:
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - apk add --no-cache curl jq
+      - VERSION=$(curl -s https://api.github.com/repos/openchamber/openchamber/releases/latest | jq -r .tag_name)
+      - echo "Latest OpenChamber version: $VERSION"
+      - STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://hub.docker.com/v2/repositories/dipi/openchamber/tags/$VERSION")
+      - 'if [ "$STATUS" = "200" ]; then echo "Version $VERSION already published, skipping"; exit 0; fi'
+      - docker build --build-arg OPENCHAMBER_VERSION=$VERSION -t dipi/openchamber:$VERSION -t dipi/openchamber:latest -f docker/Dockerfile .
+      - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+      - docker push dipi/openchamber:$VERSION
+      - docker push dipi/openchamber:latest
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+---
+kind: pipeline
+type: docker
+name: release
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+
+steps:
+  - name: release
+    image: node:lts
+    environment:
+      GITHUB_TOKEN:
+        from_secret: GITHUB_PAT
+      GITHUB_EMAIL:
+        from_secret: GITHUB_EMAIL
+      GITHUB_NAME:
+        from_secret: GITHUB_NAME
+    commands:
+      - git config --global user.email "$GITHUB_EMAIL"
+      - git config --global user.name "$GITHUB_NAME"
+      - npm ci
+      - npx semantic-release

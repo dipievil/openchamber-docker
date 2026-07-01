@@ -1,0 +1,12 @@
+{
+  "name": "openchamber-docker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Docker image for OpenChamber with daily Drone CI publishing",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/github": "^12.0.6",
+    "@semantic-release/release-notes-generator": "^12.0.0",
+    "semantic-release": "^23.0.0"
+  }
+}
