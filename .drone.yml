@@ -22,7 +22,7 @@ steps:
     commands:
       - apk add --no-cache curl jq
       - VERSION=$(curl -s https://api.github.com/repos/openchamber/openchamber/releases/latest | jq -r .tag_name)
-      - echo "Latest OpenChamber version: $VERSION"
+      - 'echo "Latest OpenChamber version: ${VERSION}"'
       - STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://hub.docker.com/v2/repositories/dipi/openchamber/tags/$VERSION")
       - 'if [ "$STATUS" = "200" ]; then echo "Version $VERSION already published, skipping"; exit 0; fi'
       - docker build --build-arg OPENCHAMBER_VERSION=$VERSION -t dipi/openchamber:$VERSION -t dipi/openchamber:latest -f docker/Dockerfile .
