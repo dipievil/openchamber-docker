@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Env files
+.env
+.env.local
+.env.*
+!.env.example
+
+# Docker
+data/
+workspaces/
+
+# Editor/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Semantic release
+CHANGELOG.md
