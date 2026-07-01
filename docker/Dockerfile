@@ -15,9 +15,7 @@ COPY --from=source /openchamber/packages/electron/package.json ./packages/electr
 COPY --from=source /openchamber/packages/vscode/package.json ./packages/vscode/
 RUN bun install --frozen-lockfile --ignore-scripts
 
-FROM oven/bun:1 AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+FROM deps AS builder
 COPY --from=source /openchamber .
 RUN bun run build:web
 

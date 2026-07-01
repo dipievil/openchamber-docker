@@ -4,8 +4,9 @@ type: docker
 name: daily-publish
 
 trigger:
-  cron:
-    - daily
+  event:
+    - cron
+    - custom
 
 steps:
   - name: publish
@@ -44,6 +45,7 @@ trigger:
     - main
   event:
     - push
+    - custom
 
 steps:
   - name: release
